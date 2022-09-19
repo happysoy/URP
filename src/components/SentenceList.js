@@ -1,6 +1,14 @@
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import styled from "@emotion/styled";
 import currentIndex from "../utils/currentIndex";
+
+// keycode constant
+
+const keyType = {
+  one: 49,
+  two: 50,
+  three: 51,
+};
 
 export default function SentenceList({ sentences }) {
   return (
@@ -14,15 +22,29 @@ export default function SentenceList({ sentences }) {
 
 function Sentence({ sentence }) {
   const inputText = useRef();
+  const [word, setWord] = useState("");
+  const [phrase, setPhrase] = useState("");
 
   const handleClick = (event) => {
     const result = currentIndex(inputText.current);
     if (result) {
-      console.log(result);
+      setWord(result);
     }
   };
-  const handleDoubleClick = () => {
-    console.log("👆👆double click");
+  // const handleDoubleClick = () => {
+  //   console.log("👆👆double click");
+  // };
+
+  const handleKeyDown = async (e) => {
+    if (e.keyCode === keyType.one) {
+      console.log("keyType=>1, 선택한 단어=>", phrase);
+    } else if (e.keyCode === keyType.two) {
+      console.log("keyType=> 2, 선택한 단어=>", word);
+    }
+  };
+
+  const handleFocus = async (e) => {
+    setPhrase(e.target.value);
   };
 
   return (
@@ -33,7 +55,9 @@ function Sentence({ sentence }) {
         value={sentence}
         readOnly
         onClick={handleClick}
-        onDoubleClick={handleDoubleClick}
+        onKeyDown={handleKeyDown}
+        onFocus={handleFocus}
+        // onDoubleClick={handleDoubleClick}
       />
     </div>
   );
@@ -43,12 +67,12 @@ const TextArea = styled.textarea`
   font-size: 16px;
   box-sizing: border-box;
   width: 800px;
-  height: 50px;
+  height: 30px;
   // border: none;
   font-family: "Noto Sans KR";
   resize: none;
 
-  :focus {
-    outline: none;
-  }
+  // :focus {
+  //   outline: none;
+  // }
 `;
